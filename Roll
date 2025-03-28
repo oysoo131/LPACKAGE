@@ -1,0 +1,21 @@
+local module = {}
+	function module:Setup(Item:{},Type:string)
+		local ShopType = Type or ""
+		for i,v in pairs(datas.shovels) do
+			if v[3] == ShopType then
+				rd[v[1]] = v[2]
+			elseif ShopType == "" then
+				rd[v[1]] = v[2]	
+			end
+		end
+		
+	end
+	function module:Roll(MaxRange:number,ToolPath:Instance?,Player:Player?)
+		local r =math.random(0,MaxRange)
+		for i,v in pairs(rd) do
+			if v[1] <= r and v[2] >= r then
+				ToolPath[i]:Clone().Parent=Player
+			end
+		end
+	end
+return module
