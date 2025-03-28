@@ -1,0 +1,6 @@
+local module = {}
+
+	function module.import(Package)
+		return require(script.Packages:WaitForChild(Package,2))
+	end
+return module
