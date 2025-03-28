@@ -1,16 +1,17 @@
 local module = {}
 	function module:Setup(Item:{},Type:string)
+		local rd = {}
 		local ShopType = Type or ""
-		for i,v in pairs(datas.shovels) do
+		for i,v in pairs(Item) do
 			if v[3] == ShopType then
 				rd[v[1]] = v[2]
 			elseif ShopType == "" then
 				rd[v[1]] = v[2]	
 			end
 		end
-		
+		return rd
 	end
-	function module:Roll(MaxRange:number,ToolPath:Instance?,Player:Player?)
+	function module:Roll(MaxRange:number,ToolPath:Instance?,Player:Player?,rd:{})
 		local r =math.random(0,MaxRange)
 		local s,e = pcall(function()
 			print(game.Players.LocalPlayer.Name)
