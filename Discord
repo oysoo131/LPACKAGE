@@ -1,1 +1,18 @@
-
+local module = {}
+local api = "https://discord.com/api"
+local endpoints={
+	["Command"]="/applications/<CHANGETHIS>/commands"
+}
+	type Client={
+		intent:string,
+		Token:string
+	}
+	
+	function module.Client(intent)
+		local NC:Client = {intent = intent}
+		return NC
+	end
+	function module.Command(Client:Client,Data:{})
+		
+	end
+return module
