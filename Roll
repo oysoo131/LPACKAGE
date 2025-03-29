@@ -11,7 +11,12 @@ local module = {}
 		end
 		return rd
 	end
-	function module:Roll(MaxRange:number,ToolPath:Instance?,Player:Player?,rd:{})
+	function module:Roll(MaxRange:number,ToolPath:Instance?,Player:Player?,rd:{},coin:Instance?,HMCN:number)
+		
+		if not coin then
+			warn("NoCoin")
+			return false
+		end
 		local r =math.random(0,MaxRange)
 		local s,e = pcall(function()
 			print(game.Players.LocalPlayer.Name)
@@ -20,10 +25,10 @@ local module = {}
 			game.Players.LocalPlayer:Kick("LOL HACKER")
 		end
 		assert(e,"LOL HACKER")
-		
+		coin.Value -= HMCN
 		for i,v in pairs(rd) do
 			if v[1] <= r and v[2] >= r then
-				ToolPath[i]:Clone().Parent=Player
+				ToolPath[i]:Clone().Parent=Player.Backpack
 			end
 		end
 	end
