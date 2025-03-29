@@ -1,0 +1,5 @@
+local module = {}
+	function module:updateHealth(ui,health)	
+		ui.Size = UDim2.new(0,(540/500)*health.Value,0,47)
+	end
+return module
