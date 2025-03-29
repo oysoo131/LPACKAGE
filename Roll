@@ -17,6 +17,7 @@ local module = {}
 			warn("NoCoin")
 			return false
 		end
+		if coin.Value >= HMCN then
 		local r =math.random(0,MaxRange)
 		local s,e = pcall(function()
 			print(game.Players.LocalPlayer.Name)
@@ -29,7 +30,10 @@ local module = {}
 		for i,v in pairs(rd) do
 			if v[1] <= r and v[2] >= r then
 				ToolPath[i]:Clone().Parent=Player.Backpack
+				coin.Value -= HMCN
 			end
 		end
+		end
+
 	end
 return module
