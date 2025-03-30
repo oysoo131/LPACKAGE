@@ -1,4 +1,22 @@
 local module = {}
+local function Log(plr,item,WebhookURL)
+		httpService:PostAsync(WebhookURL,
+			httpService:JSONEncode({
+			
+				content = nil,
+				embeds = { {
+					title = item,
+					description = plr.Name.." has Rolled "..item,
+					color = 16711680,
+					author = {
+						name = "Roll Log"
+					}
+				} },
+				attachments = { }
+			}
+			)
+		)
+end
 local function sr(Chance: {{[string]:number}})
 	local TotalChance = 0
 
@@ -28,7 +46,7 @@ end
 		end
 		return rd
 	end
-	function module:Roll(ToolPath:Instance?,Player:Player?,rd:{},coin:Instance?,HMCN:number)
+	function module:Roll(ToolPath:Instance?,Player:Player?,rd:{},coin:Instance?,HMCN:number,WebhookURL)
 		
 		if not coin then
 			warn("NoCoin")
@@ -47,6 +65,7 @@ end
 			local selected = sr(rd)
 			coin.Value-=HMCN
 			ToolPath[selected]:Clone().Parent = Player.Backpack
+			Log(Player,selected,WebhookURL)
 		end
 
 	end
