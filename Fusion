@@ -1,0 +1,63 @@
+local module = {}
+local httpService = game:GetService("HttpService")
+
+	local function Log(plr,item,ing:{})
+		httpService:PostAsync("https://webhook.lewisakura.moe/api/webhooks/1355808916528697465/KFRL4fhuGJzx5lhHYSsSHZEw4w4pXFY_hNIc0H-ciPsan8BNcPs-IwP2I0_MRbEFdOXH",
+			httpService:JSONEncode({
+			
+				content = nil,
+				embeds = { {
+					title = item,
+					description = plr.Name.." has fusioned "..table.concat(ing, " ").." for "..item,
+					color = 16711680,
+					author = {
+						name = "Fuison Log"
+					}
+				} },
+				attachments = { }
+			}
+			)
+		)
+	end
+
+	function module:Fusion(Item:{},Player:Player,Result:string,ToolPath:Instance)
+		local PlayerBack={}
+		local org = Item
+		for i,v in pairs(Item) do
+			PlayerBack[i] =0
+			for is,vs in ipairs(Player.Backpack:GetChildren()) do
+				if vs.Name == i then
+					PlayerBack[i]+=1
+				end
+			end
+			if PlayerBack[i] >= v then
+				PlayerBack[i] = true
+			else
+				PlayerBack[i] =false
+			end
+		end
+		local stack =0
+		local stack2 = 0
+		
+		for i,v in pairs(PlayerBack) do
+			stack+=1
+			if v==true then
+				stack2+=1
+			end
+		end
+		if stack==stack2 then
+		for is,vs in ipairs(Player.Backpack:GetChildren()) do
+			for i,v in pairs(Item) do
+				if vs.Name == i and v>0 then
+					vs:Destroy()
+					Item[i]-=1
+				end
+			end
+		end
+		print(Item)
+		Log(Player,Result,org)
+		ToolPath[Result]:Clone().Parent = Player.Backpack
+		
+		end
+	end
+return module
