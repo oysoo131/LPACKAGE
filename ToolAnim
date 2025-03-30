@@ -1,0 +1,34 @@
+local module = {}
+	function module:SetToolAnim(AnimId:number,Type:string,Tool:Tool)
+		task.spawn(function()
+			local Anim = Instance.new("Animation",Tool)
+			local Humanoid:Humanoid
+			local Playing
+			local ise = false
+			Anim.Name = Type
+			Anim.AnimationId = "rbxassetid://"..AnimId
+			Tool.Equipped:Connect(function()
+
+				Humanoid = Tool.Parent.Humanoid
+				ise = true
+				while ise do
+					wait()
+					if Type == "Idle" then
+						if Humanoid.MoveDirection == Vector3.new(0,0,0) then
+							Playing = Humanoid:LoadAnimation(Anim)
+							Playing:Play()
+						else
+							if Playing then
+								Playing:Stop()
+							end
+						end
+					end
+				end
+				
+			end)
+			Tool.Unequipped:Connect(function()
+				ise = false
+			end)
+		end)
+	end
+return module
