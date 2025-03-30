@@ -1,8 +1,8 @@
 local module = {}
 local httpService = game:GetService("HttpService")
 
-	local function Log(plr,item,ing:{})
-		httpService:PostAsync("https://webhook.lewisakura.moe/api/webhooks/1355808916528697465/KFRL4fhuGJzx5lhHYSsSHZEw4w4pXFY_hNIc0H-ciPsan8BNcPs-IwP2I0_MRbEFdOXH",
+	local function Log(plr,item,ing:{},WebhookURL)
+		httpService:PostAsync(WebhookURL,
 			httpService:JSONEncode({
 			
 				content = nil,
@@ -20,7 +20,7 @@ local httpService = game:GetService("HttpService")
 		)
 	end
 
-	function module:Fusion(Item:{},Player:Player,Result:string,ToolPath:Instance)
+	function module:Fusion(Item:{},Player:Player,Result:string,ToolPath:Instance,WebhookURL)
 		local PlayerBack={}
 		local org = Item
 		for i,v in pairs(Item) do
@@ -55,7 +55,7 @@ local httpService = game:GetService("HttpService")
 			end
 		end
 		print(Item)
-		Log(Player,Result,org)
+		Log(Player,Result,org,WebhookURL)
 		ToolPath[Result]:Clone().Parent = Player.Backpack
 		
 		end
