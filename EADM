@@ -1,0 +1,116 @@
+local module = {}
+local DS = game:GetService("DataStoreService")
+
+module.setting = {
+
+	["connection"] ={
+		--WUD:플레이어
+	},
+	["PSTA"]={
+		--WUD:저장소들
+	},
+	["Datas"]={
+		--WUD:데이터 관리
+	}
+}
+local Data
+local s,e =pcall(function()
+	Data =DS:GetDataStore("PSTA"):GetAsync("Database")
+end)
+if s and Data then
+	module.setting.PSTA = game:GetService("HttpService"):JSONDecode(Data)
+
+end
+local s,e =pcall(function()
+	Data =DS:GetDataStore("PSTA"):GetAsync("__Data")
+end)
+if s and Data then
+	module.setting.Datas = game:GetService("HttpService"):JSONDecode(Data)
+
+end
+print("[PSTA Save Service]: Load complete!")
+game.Players.PlayerAdded:Connect(function(plr)
+
+	module.setting.connection[plr] = plr
+end)
+game.Players.PlayerRemoving:Connect(function()
+	print(module.setting.PSTA)
+	local s,e =pcall(function()
+		DS:GetDataStore("PSTA"):SetAsync("Database",game:GetService("HttpService"):JSONEncode(module.setting.PSTA))
+	end)
+	local s,e =pcall(function()
+		DS:GetDataStore("PSTA"):SetAsync("__Data",game:GetService("HttpService"):JSONEncode(module.setting.Datas))
+	end)
+	warn(e)
+end)
+local PSTA ={}
+function PSTA:New(Name)
+	if not module.setting.PSTA[Name] then
+		local PSTAD = {
+			["Connections"]={},
+			["IsUsing"]=true,
+			["Data"]={},
+			["id"] = Name
+		}
+		setmetatable(PSTAD,self)
+		module.setting.PSTA[Name] = Name
+		module.setting.Datas[Name] = PSTAD
+		self.__index = PSTA
+		self.main = PSTAD
+		return PSTAD
+	else
+		return error("attempt to create exit PSTA")
+	end
+
+end
+function PSTA:New2(Name,Data,Connections)
+
+	local PSTAD = {
+		["Connections"]=Connections,
+		["IsUsing"]=true,
+		["Data"]=Data,
+		["id"] = Name
+	}
+	setmetatable(PSTAD,self)
+	self.__index = PSTA
+	self.main = PSTAD
+	return PSTAD
+
+end
+function PSTA:Get(key)
+	return self.Data[key]
+end
+
+function PSTA:AutoSave(types,key,Data:Instance,Player:Player)
+	--TODO:자동 저장
+	task.spawn(function()
+
+		while task.wait() do
+
+			PSTA:SetSave(types,Data.Value,key)
+		end
+	end)
+end
+function PSTA:SetSave(types,Data:{}?,key)
+	if Data == nil then
+		if self.main.Data[key] then
+			self.main.Data[key] = self.main.Data[key]
+		end
+	else
+		self.main.Data[key] = Data
+	end
+end
+function module:CreatePSTA(Name)
+	return PSTA:New(Name)
+end
+
+function module:GetPSTA(Name)
+	local psta:PSTA =PSTA:New2(module.setting.Datas[Name].id,module.setting.Datas[Name].Data,module.setting.Datas[Name].Connections)
+
+	if not psta then
+		return error("No exit PSTA Named: "..Name)
+	else
+		return psta
+	end
+end
+return module
